@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.takaakihirano.kotlinsample.R
+import com.example.takaakihirano.kotlinsample.bindView
 import com.example.takaakihirano.kotlinsample.model.Article
 
 /**
@@ -30,27 +31,21 @@ class ArticleView : FrameLayout {
                 defStyleAttr: Int,
                 defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
-    var profileImageView: ImageView? = null
+    val profileImageView: ImageView by bindView<ImageView>(R.id.profile_image)
 
-    var titleTextView: TextView? = null
+    val titleTextView: TextView by bindView<TextView>(R.id.title)
 
-    var userNameTextView: TextView? = null
+    val userNameTextView: TextView by bindView<TextView>(R.id.user_name)
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_article, this)
-
-        profileImageView = findViewById(R.id.profile_image) as ImageView
-
-        titleTextView = findViewById(R.id.title) as TextView
-
-        userNameTextView = findViewById(R.id.user_name) as TextView
     }
 
     fun setArticle(article: Article) {
-        titleTextView?.text = article.title
-        userNameTextView?.text = article.user.name
+        titleTextView.text = article.title
+        userNameTextView.text = article.user.name
 
         // TODO: set profile image
-        profileImageView?.setBackgroundColor(Color.RED)
+        profileImageView.setBackgroundColor(Color.RED)
     }
 }
