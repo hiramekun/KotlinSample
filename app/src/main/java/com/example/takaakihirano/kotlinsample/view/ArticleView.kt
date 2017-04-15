@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.takaakihirano.kotlinsample.R
 import com.example.takaakihirano.kotlinsample.bindView
 import com.example.takaakihirano.kotlinsample.model.Article
@@ -44,8 +45,6 @@ class ArticleView : FrameLayout {
     fun setArticle(article: Article) {
         titleTextView.text = article.title
         userNameTextView.text = article.user.name
-
-        // TODO: set profile image
-        profileImageView.setBackgroundColor(Color.RED)
+        Glide.with(context).load(article.user.profileImageUrl).into(profileImageView)
     }
 }

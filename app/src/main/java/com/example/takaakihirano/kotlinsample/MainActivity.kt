@@ -6,8 +6,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
-import com.example.takaakihirano.kotlinsample.model.Article
-import com.example.takaakihirano.kotlinsample.model.User
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -23,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val listAdapter = ArticleListAdapter(applicationContext)
-        listAdapter.articles = listOf(dummyArticle("Kotlin入門", "太郎"),
-                dummyArticle("Java入門", "二郎"))
 
         val listView: ListView = findViewById(R.id.list_view) as ListView
         listView.adapter = listAdapter
@@ -62,10 +58,4 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
-    private fun dummyArticle(title: String, userName: String): Article =
-            Article(id = "",
-                    title = title,
-                    url = "https://kotlinlang.org/",
-                    user = User(id = "", name = userName, profileImageUrl = ""))
 }
