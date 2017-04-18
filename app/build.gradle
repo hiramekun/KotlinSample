@@ -33,6 +33,9 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
+
     testCompile 'junit:junit:4.12'
 
     compile 'com.android.support:appcompat-v7:25.3.1'
