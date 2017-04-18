@@ -36,8 +36,12 @@ class ArticleActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
-        (supportActionBar as ActionBar).setDisplayHomeAsUpEnabled(true)
-        (supportActionBar as ActionBar).setDisplayShowHomeEnabled(true)
+        val actionBar = supportActionBar as ActionBar
+        val article: Article = intent.getParcelableExtra(ARTICLE_EXTRA)
+
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
+        actionBar.title = article.title
 
         return super.onCreateOptionsMenu(menu)
     }
