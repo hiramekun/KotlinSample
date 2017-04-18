@@ -1,4 +1,4 @@
-package com.example.takaakihirano.kotlinsample
+package com.example.takaakihirano.kotlinsample.util
 
 import android.graphics.Bitmap
 import android.view.View

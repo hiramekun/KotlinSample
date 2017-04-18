@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.takaakihirano.kotlinsample.R
-import com.example.takaakihirano.kotlinsample.bindView
+import com.example.takaakihirano.kotlinsample.extensions.bindView
 import com.example.takaakihirano.kotlinsample.model.Article
 
 /**

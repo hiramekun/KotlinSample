@@ -9,7 +9,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.ProgressBar
+import com.example.takaakihirano.kotlinsample.extensions.getInstanceForDevelopment
 import com.example.takaakihirano.kotlinsample.model.Article
+import com.example.takaakihirano.kotlinsample.util.MyWebViewClient
 import io.realm.Realm
 
 /**

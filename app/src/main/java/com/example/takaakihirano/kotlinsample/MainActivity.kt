@@ -6,7 +6,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
+import com.example.takaakihirano.kotlinsample.application.QiitaClientApp
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
+import com.example.takaakihirano.kotlinsample.extensions.covertListToRealmList
+import com.example.takaakihirano.kotlinsample.extensions.getInstanceForDevelopment
+import com.example.takaakihirano.kotlinsample.extensions.hideKeyboard
+import com.example.takaakihirano.kotlinsample.extensions.toast
 import com.example.takaakihirano.kotlinsample.model.Article
 import com.example.takaakihirano.kotlinsample.model.Self
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity

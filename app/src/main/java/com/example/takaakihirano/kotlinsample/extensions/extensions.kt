@@ -1,4 +1,4 @@
-package com.example.takaakihirano.kotlinsample
+package com.example.takaakihirano.kotlinsample.extensions
 
 import android.content.Context
 import android.support.annotation.IdRes

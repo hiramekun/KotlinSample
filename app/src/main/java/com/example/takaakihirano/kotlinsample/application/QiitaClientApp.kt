@@ -1,4 +1,4 @@
-package com.example.takaakihirano.kotlinsample
+package com.example.takaakihirano.kotlinsample.application
 
 import android.app.Application
 import com.example.takaakihirano.kotlinsample.dagger.AppComponent

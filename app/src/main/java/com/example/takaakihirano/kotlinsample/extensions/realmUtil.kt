@@ -1,4 +1,4 @@
-package com.example.takaakihirano.kotlinsample
+package com.example.takaakihirano.kotlinsample.extensions
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
