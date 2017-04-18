@@ -1,9 +1,7 @@
 package com.example.takaakihirano.kotlinsample
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
@@ -11,6 +9,7 @@ import android.widget.ProgressBar
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
+import io.realm.Realm
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -31,7 +30,7 @@ class MainActivity : RxAppCompatActivity() {
         val listAdapter = ArticleListAdapter(applicationContext)
         listView.adapter = listAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
-            ArticleActivity.intent(this, listAdapter.articles[position]).let { startActivity(it) }
+            ArticleActivity.intent(this, listAdapter.articles[position].id).let { startActivity(it) }
         }
 
         listView.setOnTouchListener { v, event ->
@@ -59,6 +58,14 @@ class MainActivity : RxAppCompatActivity() {
                         queryEditText.text.clear()
                         listAdapter.articles = it
                         listAdapter.notifyDataSetChanged()
+
+                        val realm: Realm = getInstanceForDevelopment()
+                        realm.executeTransactionAsync({ realm ->
+                            realm.copyToRealmOrUpdate(it)
+                        }, { ->
+                            realm.close()
+                        })
+
                     }, {
                         toast("エラー: $it")
                     })

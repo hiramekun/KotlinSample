@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.ProgressBar
 import com.example.takaakihirano.kotlinsample.model.Article
+import io.realm.Realm
 
 /**
  * Created by takaakihirano on 2017/04/15.
@@ -21,9 +22,11 @@ class ArticleActivity : AppCompatActivity() {
 
         private const val ARTICLE_EXTRA: String = "article"
 
-        fun intent(context: Context, article: Article): Intent =
-                Intent(context, ArticleActivity::class.java).putExtra(ARTICLE_EXTRA, article)
+        fun intent(context: Context, articleId: String): Intent =
+                Intent(context, ArticleActivity::class.java).putExtra(ARTICLE_EXTRA, articleId)
     }
+
+    var article: Article? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,20 +34,22 @@ class ArticleActivity : AppCompatActivity() {
 
         val webView = findViewById(R.id.web_view) as WebView
         val progressBar = findViewById(R.id.progress_bar) as ProgressBar
-        val article: Article = intent.getParcelableExtra(ARTICLE_EXTRA)
+        val realm: Realm = getInstanceForDevelopment()
+        val id: String = intent.extras.getString(ARTICLE_EXTRA)
 
-        webView.loadUrl(article.url)
+        article = realm.where(Article::class.java).equalTo("id", id).findFirst()
+
+        webView.loadUrl(article?.url)
         webView.setWebViewClient(MyWebViewClient(progressBar))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
         val actionBar = supportActionBar as ActionBar
-        val article: Article = intent.getParcelableExtra(ARTICLE_EXTRA)
 
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
-        actionBar.title = article.title
+        actionBar.title = article?.title
 
         return super.onCreateOptionsMenu(menu)
     }

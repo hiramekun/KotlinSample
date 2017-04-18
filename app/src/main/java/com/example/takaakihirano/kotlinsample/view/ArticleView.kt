@@ -1,7 +1,6 @@
 package com.example.takaakihirano.kotlinsample.view
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -44,7 +43,7 @@ class ArticleView : FrameLayout {
 
     fun setArticle(article: Article) {
         titleTextView.text = article.title
-        userNameTextView.text = article.user.name
-        Glide.with(context).load(article.user.profileImageUrl).into(profileImageView)
+        userNameTextView.text = article.user?.name
+        Glide.with(context).load(article.user?.profileImageUrl).into(profileImageView)
     }
 }
