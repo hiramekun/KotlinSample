@@ -2,7 +2,9 @@ package com.example.takaakihirano.kotlinsample
 
 import android.content.Context
 import android.support.annotation.IdRes
+import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 
 /**
@@ -15,4 +17,9 @@ fun <T : View> View.bindView(@IdRes id: Int): Lazy<T> = lazy {
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
+}
+
+fun Context.hideKeyboard(activity: AppCompatActivity) {
+    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(activity.currentFocus.windowToken, 0)
 }

@@ -1,7 +1,9 @@
 package com.example.takaakihirano.kotlinsample
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
@@ -32,6 +34,11 @@ class MainActivity : RxAppCompatActivity() {
             ArticleActivity.intent(this, listAdapter.articles[position]).let { startActivity(it) }
         }
 
+        listView.setOnTouchListener { v, event ->
+            hideKeyboard(this)
+            super.onTouchEvent(event)
+        }
+
         /* set up search */
         val queryEditText = findViewById(R.id.query_edit_text) as EditText
         val searchButton = findViewById(R.id.search_button) as Button
@@ -45,6 +52,7 @@ class MainActivity : RxAppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doAfterTerminate {
                         progressBar.visibility = View.GONE
+                        hideKeyboard(this)
                     }
                     .bindToLifecycle(this)
                     .subscribe({
