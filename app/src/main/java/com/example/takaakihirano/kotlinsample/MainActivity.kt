@@ -7,6 +7,8 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
+import com.example.takaakihirano.kotlinsample.model.Article
+import com.example.takaakihirano.kotlinsample.model.Self
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
 import io.realm.Realm
@@ -61,7 +63,11 @@ class MainActivity : RxAppCompatActivity() {
 
                         val realm: Realm = getInstanceForDevelopment()
                         realm.executeTransactionAsync({ realm ->
-                            realm.copyToRealmOrUpdate(it)
+
+                            realm.where(Article::class.java).findAll()?.deleteAllFromRealm()
+                            val self: Self = realm.where(Self::class.java).findFirst() ?: realm.createObject(Self::class.java, 0)
+                            self.articles = covertListToRealmList(realm.copyToRealmOrUpdate(it))
+
                         }, { ->
                             realm.close()
                         })
@@ -69,7 +75,6 @@ class MainActivity : RxAppCompatActivity() {
                     }, {
                         toast("エラー: $it")
                     })
-
         }
     }
 }
