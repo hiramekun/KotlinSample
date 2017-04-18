@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
+import android.widget.ProgressBar
 import com.example.takaakihirano.kotlinsample.model.Article
 
 /**
@@ -29,9 +30,11 @@ class ArticleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_article)
 
         val webView = findViewById(R.id.web_view) as WebView
+        val progressBar = findViewById(R.id.progress_bar) as ProgressBar
         val article: Article = intent.getParcelableExtra(ARTICLE_EXTRA)
 
         webView.loadUrl(article.url)
+        webView.setWebViewClient(MyWebViewClient(progressBar))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
