@@ -31,11 +31,11 @@ class ArticleView : FrameLayout {
                 defStyleAttr: Int,
                 defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
-    val profileImageView: ImageView by bindView<ImageView>(R.id.profile_image)
+    private val profileImageView: ImageView by bindView(R.id.profile_image)
 
-    val titleTextView: TextView by bindView<TextView>(R.id.title)
+    private val titleTextView: TextView by bindView(R.id.title)
 
-    val userNameTextView: TextView by bindView<TextView>(R.id.user_name)
+    private val userNameTextView: TextView by bindView(R.id.user_name)
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_article, this)

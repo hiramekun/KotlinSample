@@ -8,15 +8,11 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import com.example.takaakihirano.kotlinsample.application.QiitaClientApp
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
-import com.example.takaakihirano.kotlinsample.extensions.covertListToRealmList
-import com.example.takaakihirano.kotlinsample.extensions.getInstanceForDevelopment
-import com.example.takaakihirano.kotlinsample.extensions.hideKeyboard
-import com.example.takaakihirano.kotlinsample.extensions.toast
+import com.example.takaakihirano.kotlinsample.extensions.*
 import com.example.takaakihirano.kotlinsample.model.Article
 import com.example.takaakihirano.kotlinsample.model.Self
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import io.realm.Realm
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -24,31 +20,30 @@ import javax.inject.Inject
 class MainActivity : RxAppCompatActivity() {
 
     @Inject
-    lateinit var articleClient: ArticleClient
+    lateinit private var articleClient: ArticleClient
+
+    private val listView: ListView by bindView<ListView>(R.id.list_view)
+    private val listAdapter by lazy { ArticleListAdapter(applicationContext) }
+
+    private val queryEditText: EditText by bindView<EditText>(R.id.query_edit_text)
+    private val searchButton: Button by bindView<Button>(R.id.search_button)
+    private val progressBar: ProgressBar by bindView<ProgressBar>(R.id.progress_bar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        (application as QiitaClientApp).component.inject(this)
         setContentView(R.layout.activity_main)
 
-        /* set up listView and adapter */
-        val listView: ListView = findViewById(R.id.list_view) as ListView
-        val listAdapter = ArticleListAdapter(applicationContext)
+        (application as QiitaClientApp).component.inject(this)
+
         listView.adapter = listAdapter
-        listView.setOnItemClickListener { parent, view, position, id ->
+        listView.setOnItemClickListener { _, _, position, _ ->
             ArticleActivity.intent(this, listAdapter.articles[position].id).let { startActivity(it) }
         }
 
-        listView.setOnTouchListener { v, event ->
+        listView.setOnTouchListener { _, event ->
             hideKeyboard(this)
             super.onTouchEvent(event)
         }
-
-        /* set up search */
-        val queryEditText = findViewById(R.id.query_edit_text) as EditText
-        val searchButton = findViewById(R.id.search_button) as Button
-        val progressBar = findViewById(R.id.progress_bar) as ProgressBar
 
         searchButton.setOnClickListener {
             progressBar.visibility = View.VISIBLE
@@ -62,24 +57,29 @@ class MainActivity : RxAppCompatActivity() {
                     }
                     .bindToLifecycle(this)
                     .subscribe({
-                        queryEditText.text.clear()
-                        listAdapter.articles = it
-                        listAdapter.notifyDataSetChanged()
-
-                        val realm: Realm = getInstanceForDevelopment()
-                        realm.executeTransactionAsync({ realm ->
-
-                            realm.where(Article::class.java).findAll()?.deleteAllFromRealm()
-                            val self: Self = realm.where(Self::class.java).findFirst() ?: realm.createObject(Self::class.java, 0)
-                            self.articles = covertListToRealmList(realm.copyToRealmOrUpdate(it))
-
-                        }, { ->
-                            realm.close()
-                        })
-
-                    }, {
+                        persist(it,
+                                onSuccess = {
+                                    queryEditText.text.clear()
+                                    updateListView(it)
+                                }
+                        )
+                    }) {
                         toast("エラー: $it")
-                    })
+                    }
         }
+    }
+
+    private fun persist(articles: List<Article>, onSuccess: () -> Unit) {
+        RealmService.executeTransactionAsync({ realm ->
+            realm.where(Article::class.java).findAll()?.deleteAllFromRealm()
+            (realm.where(Self::class.java).findFirst() ?: realm.createObject(Self::class.java, 0))
+                    .articles = realm.copyToRealmOrUpdate(articles).toRealmList()
+
+        }, onSuccess)
+    }
+
+    private fun updateListView(articles: List<Article>) {
+        listAdapter.articles = articles
+        listAdapter.notifyDataSetChanged()
     }
 }

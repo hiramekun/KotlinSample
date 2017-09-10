@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.ProgressBar
+import com.example.takaakihirano.kotlinsample.extensions.bindView
 import com.example.takaakihirano.kotlinsample.extensions.getInstanceForDevelopment
 import com.example.takaakihirano.kotlinsample.model.Article
 import com.example.takaakihirano.kotlinsample.util.MyWebViewClient
@@ -18,40 +19,39 @@ import io.realm.Realm
  * Created by takaakihirano on 2017/04/15.
  */
 
+const private val ARTICLE_EXTRA = "article"
+
 class ArticleActivity : AppCompatActivity() {
 
     companion object {
-
-        private const val ARTICLE_EXTRA: String = "article"
-
         fun intent(context: Context, articleId: String): Intent =
                 Intent(context, ArticleActivity::class.java).putExtra(ARTICLE_EXTRA, articleId)
     }
 
-    var article: Article? = null
+    lateinit private var article: Article
+
+    private var realm: Realm? = null
+    private val webView: WebView by bindView(R.id.web_view)
+    private val progressBar: ProgressBar by bindView(R.id.progress_bar)
+    private val id by lazy { intent.extras.getString(ARTICLE_EXTRA) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article)
+        realm = getInstanceForDevelopment()
 
-        val webView = findViewById(R.id.web_view) as WebView
-        val progressBar = findViewById(R.id.progress_bar) as ProgressBar
-        val realm: Realm = getInstanceForDevelopment()
-        val id: String = intent.extras.getString(ARTICLE_EXTRA)
-
-        article = realm.where(Article::class.java).equalTo("id", id).findFirst()
-
-        webView.loadUrl(article?.url)
+        article = realm!!.where(Article::class.java).equalTo("id", id).findFirst()
+        webView.loadUrl(article.url)
         webView.setWebViewClient(MyWebViewClient(progressBar))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
-        val actionBar = supportActionBar as ActionBar
-
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setDisplayShowHomeEnabled(true)
-        actionBar.title = article?.title
+        (supportActionBar as ActionBar).let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+            it.title = article.title
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -63,5 +63,10 @@ class ArticleActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm?.close()
     }
 }

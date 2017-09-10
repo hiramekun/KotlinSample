@@ -9,7 +9,7 @@ import io.realm.annotations.RealmClass
  */
 
 @RealmClass
-public open class User(@PrimaryKey public open var id: String = "",
-                       public open var name: String = "",
-                       public open var profileImageUrl: String = "") : RealmObject()
+open class User(@PrimaryKey open var id: String = "",
+                       open var name: String = "",
+                       open var profileImageUrl: String = "") : RealmObject()
 

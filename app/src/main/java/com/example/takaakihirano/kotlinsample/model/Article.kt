@@ -9,7 +9,7 @@ import io.realm.annotations.RealmClass
  */
 
 @RealmClass
-public open class Article(@PrimaryKey public open var id: String = "",
-                          public open var title: String = "",
-                          public open var url: String = "",
-                          public open var user: User? = null) : RealmObject()
+open class Article(@PrimaryKey open var id: String = "",
+                          open var title: String = "",
+                          open var url: String = "",
+                          open var user: User? = null) : RealmObject()

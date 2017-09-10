@@ -12,9 +12,17 @@ import io.realm.RealmObject
 fun getInstanceForDevelopment(): Realm =
         Realm.getInstance(RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build())
 
-fun <T : RealmObject> covertListToRealmList(managedList: List<T>): RealmList<T> {
-    val realmList: RealmList<T> = RealmList()
-    realmList.addAll(managedList.subList(0, managedList.size))
+fun <T : RealmObject> List<T>.toRealmList(): RealmList<T> =
+        RealmList<T>().also {
+            it.addAll(this.subList(0, this.size))
+        }
 
-    return realmList
+object RealmService {
+    fun executeTransactionAsync(transaction: (Realm) -> Unit, onSuccess: () -> Unit) {
+        val realm = getInstanceForDevelopment()
+        realm.executeTransactionAsync(transaction, { ->
+            realm.close()
+            onSuccess()
+        })
+    }
 }

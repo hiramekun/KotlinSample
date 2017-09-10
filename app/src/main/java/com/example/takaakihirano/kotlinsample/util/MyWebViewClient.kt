@@ -10,7 +10,7 @@ import android.widget.ProgressBar
  * Created by takaakihirano on 2017/04/18.
  */
 
-class MyWebViewClient(val progressBar: ProgressBar) : WebViewClient() {
+class MyWebViewClient(private val progressBar: ProgressBar) : WebViewClient() {
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)

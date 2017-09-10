@@ -10,5 +10,5 @@ import io.realm.annotations.RealmClass
  */
 
 @RealmClass
-public open class Self(@PrimaryKey public open var id: Int = 0,
-                       public open var articles: RealmList<Article>? = null) : RealmObject()
+open class Self(@PrimaryKey open var id: Int = 0,
+                       open var articles: RealmList<Article>? = null) : RealmObject()

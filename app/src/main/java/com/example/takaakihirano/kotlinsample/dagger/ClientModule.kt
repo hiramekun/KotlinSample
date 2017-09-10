@@ -15,6 +15,8 @@ import javax.inject.Singleton
  * Created by takaakihirano on 2017/04/17.
  */
 
+const private val QIITA = "https://qiita.com"
+
 @Module
 class ClientModule {
 
@@ -27,7 +29,7 @@ class ClientModule {
     @Provides
     @Singleton
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-            .baseUrl("https://qiita.com")
+            .baseUrl(QIITA)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .build()
