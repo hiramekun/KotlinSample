@@ -1,18 +1,20 @@
 package com.example.takaakihirano.kotlinsample
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.ProgressBar
+import android.widget.*
 import com.example.takaakihirano.kotlinsample.application.QiitaClientApp
 import com.example.takaakihirano.kotlinsample.client.ArticleClient
-import com.example.takaakihirano.kotlinsample.extensions.*
+import com.example.takaakihirano.kotlinsample.extensions.RealmService
+import com.example.takaakihirano.kotlinsample.extensions.hideKeyboard
+import com.example.takaakihirano.kotlinsample.extensions.toRealmList
+import com.example.takaakihirano.kotlinsample.extensions.toast
 import com.example.takaakihirano.kotlinsample.model.Article
 import com.example.takaakihirano.kotlinsample.model.Self
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle.kotlin.bindToLifecycle
+import org.jetbrains.anko.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -22,44 +24,40 @@ class MainActivity : RxAppCompatActivity() {
     @Inject
     lateinit private var articleClient: ArticleClient
 
-    private val listView: ListView by bindView<ListView>(R.id.list_view)
     private val listAdapter by lazy { ArticleListAdapter(applicationContext) }
-
-    private val queryEditText: EditText by bindView<EditText>(R.id.query_edit_text)
-    private val searchButton: Button by bindView<Button>(R.id.search_button)
-    private val progressBar: ProgressBar by bindView<ProgressBar>(R.id.progress_bar)
+    private val ui = MainActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
         (application as QiitaClientApp).component.inject(this)
+        ui.setContentView(this)
 
-        listView.adapter = listAdapter
-        listView.setOnItemClickListener { _, _, position, _ ->
-            ArticleActivity.intent(this, listAdapter.articles[position].id).let { startActivity(it) }
+        ui.listView.let {
+            it.adapter = listAdapter
+            it.setOnItemClickListener { _, _, position, _ ->
+                ArticleActivity.intent(this, listAdapter.articles[position].id).let { startActivity(it) }
+            }
+            it.setOnTouchListener { _, event ->
+                hideKeyboard(this)
+                super.onTouchEvent(event)
+            }
         }
 
-        listView.setOnTouchListener { _, event ->
-            hideKeyboard(this)
-            super.onTouchEvent(event)
-        }
+        ui.searchButton.setOnClickListener {
+            ui.progressBar.visibility = View.VISIBLE
 
-        searchButton.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-
-            articleClient.search(queryEditText.text.toString())
+            articleClient.search(ui.queryEditText.text.toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doAfterTerminate {
-                        progressBar.visibility = View.GONE
+                        ui.progressBar.visibility = View.GONE
                         hideKeyboard(this)
                     }
                     .bindToLifecycle(this)
                     .subscribe({
                         persist(it,
                                 onSuccess = {
-                                    queryEditText.text.clear()
+                                    ui.queryEditText.text.clear()
                                     updateListView(it)
                                 }
                         )
@@ -81,5 +79,35 @@ class MainActivity : RxAppCompatActivity() {
     private fun updateListView(articles: List<Article>) {
         listAdapter.articles = articles
         listAdapter.notifyDataSetChanged()
+    }
+}
+
+class MainActivityUi : AnkoComponent<MainActivity> {
+    lateinit var listView: ListView
+    lateinit var progressBar: ProgressBar
+    lateinit var queryEditText: EditText
+    lateinit var searchButton: Button
+
+    override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
+        linearLayout {
+            frameLayout {
+                listView = listView().lparams(width = matchParent, height = matchParent)
+                progressBar = progressBar {
+                    visibility = View.GONE
+                }.lparams(width = wrapContent, height = wrapContent, gravity = Gravity.CENTER)
+
+            }.lparams(width = matchParent, height = 0, weight = 1F)
+
+            linearLayout {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.BOTTOM
+
+                queryEditText = editText().lparams(width = 0, height = wrapContent, weight = 1F)
+                searchButton = button {
+                    text = "検索"
+                }.lparams(width = wrapContent, height = wrapContent)
+
+            }.lparams(width = matchParent, height = wrapContent)
+        }
     }
 }
