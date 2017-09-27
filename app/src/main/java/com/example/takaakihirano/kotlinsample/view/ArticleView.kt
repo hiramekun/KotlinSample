@@ -15,26 +15,12 @@ import com.example.takaakihirano.kotlinsample.model.Article
  * Created by takaakihirano on 2017/04/10.
  */
 
-class ArticleView : FrameLayout {
-
-    constructor(context: Context?) : super(context)
-
-    constructor(context: Context?,
-                attrs: AttributeSet?) : super(context, attrs)
-
-    constructor(context: Context?,
-                attrs: AttributeSet?,
-                defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    constructor(context: Context?,
-                attrs: AttributeSet?,
-                defStyleAttr: Int,
-                defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+class ArticleView @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val profileImageView: ImageView by bindView(R.id.profile_image)
-
     private val titleTextView: TextView by bindView(R.id.title)
-
     private val userNameTextView: TextView by bindView(R.id.user_name)
 
     init {
