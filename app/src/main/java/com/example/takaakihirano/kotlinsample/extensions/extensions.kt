@@ -14,12 +14,12 @@ import android.widget.Toast
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.bindView(@IdRes id: Int): Lazy<T> = lazy {
-    findViewById(id) as T
+    findViewById<T>(id)
 }
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> Activity.bindView(@IdRes id: Int): Lazy<T> = lazy {
-    findViewById(id) as T
+    findViewById<T>(id)
 }
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {

@@ -22,7 +22,7 @@ import javax.inject.Inject
 class MainActivity : RxAppCompatActivity() {
 
     @Inject
-    lateinit private var articleClient: ArticleClient
+    lateinit var articleClient: ArticleClient
 
     private val listAdapter by lazy { ArticleListAdapter(applicationContext) }
     private val ui = MainActivityUi()
