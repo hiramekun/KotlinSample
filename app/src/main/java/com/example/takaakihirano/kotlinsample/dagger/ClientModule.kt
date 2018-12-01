@@ -15,7 +15,7 @@ import javax.inject.Singleton
  * Created by takaakihirano on 2017/04/17.
  */
 
-const private val QIITA = "https://qiita.com"
+private const val QIITA = "https://qiita.com"
 
 @Module
 class ClientModule {

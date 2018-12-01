@@ -1,5 +1,6 @@
 package com.example.takaakihirano.kotlinsample
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -22,12 +23,12 @@ class MainActivity : RxAppCompatActivity() {
     @Inject
     lateinit var articleClient: ArticleClient
 
-    private val listView: ListView by bindView<ListView>(R.id.list_view)
+    private val listView: ListView by bindView(R.id.list_view)
     private val listAdapter by lazy { ArticleListAdapter(applicationContext) }
 
-    private val queryEditText: EditText by bindView<EditText>(R.id.query_edit_text)
-    private val searchButton: Button by bindView<Button>(R.id.search_button)
-    private val progressBar: ProgressBar by bindView<ProgressBar>(R.id.progress_bar)
+    private val queryEditText: EditText by bindView(R.id.query_edit_text)
+    private val searchButton: Button by bindView(R.id.search_button)
+    private val progressBar: ProgressBar by bindView(R.id.progress_bar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,7 @@ class MainActivity : RxAppCompatActivity() {
             super.onTouchEvent(event)
         }
 
-        searchButton.setOnClickListener {
+        searchButton.setOnClickListener { _ ->
             progressBar.visibility = View.VISIBLE
 
             articleClient.search(queryEditText.text.toString())

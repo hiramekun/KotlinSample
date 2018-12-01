@@ -42,7 +42,7 @@ class ArticleActivity : AppCompatActivity() {
 
         article = realm!!.where(Article::class.java).equalTo("id", id).findFirst()
         webView.loadUrl(article.url)
-        webView.setWebViewClient(MyWebViewClient(progressBar))
+        webView.webViewClient = MyWebViewClient(progressBar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

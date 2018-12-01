@@ -8,7 +8,7 @@ import javax.inject.Singleton
  * Created by takaakihirano on 2017/04/17.
  */
 
-@Component(modules = arrayOf(ClientModule::class))
+@Component(modules = [ClientModule::class])
 @Singleton
 interface AppComponent {
 

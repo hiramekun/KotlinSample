@@ -20,7 +20,7 @@ fun <T : RealmObject> List<T>.toRealmList(): RealmList<T> =
 object RealmService {
     fun executeTransactionAsync(transaction: (Realm) -> Unit, onSuccess: () -> Unit) {
         val realm = getInstanceForDevelopment()
-        realm.executeTransactionAsync(transaction, { ->
+        realm.executeTransactionAsync(transaction, {
             realm.close()
             onSuccess()
         })
