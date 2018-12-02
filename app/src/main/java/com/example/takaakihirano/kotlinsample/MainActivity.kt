@@ -1,6 +1,5 @@
 package com.example.takaakihirano.kotlinsample
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -38,7 +37,7 @@ class MainActivity : RxAppCompatActivity() {
 
         listView.adapter = listAdapter
         listView.setOnItemClickListener { _, _, position, _ ->
-            ArticleActivity.intent(this, listAdapter.articles[position].id).let { startActivity(it) }
+            startActivity(ArticleActivity.intent(this, listAdapter.articles[position].id))
         }
 
         listView.setOnTouchListener { _, event ->

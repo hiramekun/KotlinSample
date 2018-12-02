@@ -19,7 +19,7 @@ import io.realm.Realm
  * Created by takaakihirano on 2017/04/15.
  */
 
-const private val ARTICLE_EXTRA = "article"
+private const val ARTICLE_EXTRA = "article"
 
 class ArticleActivity : AppCompatActivity() {
 
@@ -28,7 +28,7 @@ class ArticleActivity : AppCompatActivity() {
                 Intent(context, ArticleActivity::class.java).putExtra(ARTICLE_EXTRA, articleId)
     }
 
-    lateinit private var article: Article
+    private lateinit var article: Article
 
     private var realm: Realm? = null
     private val webView: WebView by bindView(R.id.web_view)
